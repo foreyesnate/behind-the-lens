@@ -1,0 +1,1033 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Behind the Lens — Brand Concept</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="deck-stage.js"></script>
+<style>
+  :root {
+    --navy: #415D9E;
+    --teal: #51A0AD;
+    --stone: #F4F4F8;
+    --yellow: #FCBA02;
+    --dk: #110F2B;
+    --dk-60: rgba(17,15,43,0.60);
+    --dk-40: rgba(17,15,43,0.40);
+    --dk-20: rgba(17,15,43,0.20);
+    --dk-10: rgba(17,15,43,0.10);
+    --stone-dim: #E8E8EF;
+  }
+  html, body { margin: 0; padding: 0; background: #000; }
+  body { font-family: "DM Sans", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif; color: var(--dk); }
+
+  /* ───── Typography ───── */
+  .serif { font-family: "Instrument Serif", "Times New Roman", serif; font-weight: 400; letter-spacing: -0.01em; }
+  .mono  { font-family: "JetBrains Mono", ui-monospace, Menlo, monospace; }
+  .sans  { font-family: "DM Sans", system-ui, sans-serif; }
+
+  /* TYPE_SCALE (px @ 1920×1080) */
+  /* title 88 · h2 64 · subtitle 44 · body 28 · small 22 · eyebrow 18 */
+  /* SPACING: pad 100/80, titleGap 52, itemGap 28 */
+
+  section.slide {
+    background: var(--stone);
+    color: var(--dk);
+    padding: 72px 100px 80px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  section.slide.dark  { background: var(--dk); color: var(--stone); }
+  section.slide.yellow { background: var(--yellow); color: var(--dk); }
+  section.slide.navy  { background: var(--navy); color: var(--stone); }
+  section.slide.teal  { background: var(--teal); color: var(--stone); }
+
+  /* ───── Masthead (repeats top of most slides) ───── */
+  .masthead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 20px;
+    border-bottom: 1.5px solid currentColor;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+  }
+  .masthead .left { display: flex; align-items: baseline; gap: 22px; }
+  .masthead .mark {
+    font-family: "Instrument Serif", serif;
+    font-style: italic;
+    font-size: 26px;
+    letter-spacing: -0.01em;
+    text-transform: none;
+    font-weight: 400;
+  }
+  .masthead .mark .bt { font-style: normal; letter-spacing: 0.18em; font-family: "JetBrains Mono", monospace; font-size: 13px; display: block; margin-bottom: -2px; opacity: 0.7; }
+  .masthead .right { opacity: 0.7; }
+
+  /* shared body rules */
+  .eyebrow {
+    font-family: "JetBrains Mono", monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--yellow);
+  }
+  .slide.yellow .eyebrow, .slide.stone .eyebrow { color: var(--navy); }
+  h1.display {
+    font-family: "Instrument Serif", serif;
+    font-weight: 400;
+    font-size: 148px;
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+  h1.display em { font-style: italic; color: var(--yellow); }
+  h2.section-title {
+    font-family: "Instrument Serif", serif;
+    font-size: 88px;
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+    margin: 0 0 0 0;
+    font-weight: 400;
+  }
+  h2.section-title em { font-style: italic; }
+  p.lede {
+    font-family: "Instrument Serif", serif;
+    font-size: 44px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  p.body {
+    font-size: 26px;
+    line-height: 1.45;
+    max-width: 780px;
+    margin: 0;
+  }
+  .kicker-num {
+    font-family: "Instrument Serif", serif;
+    font-size: 200px;
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+  }
+
+  /* page number bottom */
+  .folio {
+    position: absolute;
+    bottom: 40px;
+    left: 100px;
+    right: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 14px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.55;
+  }
+
+  /* circles ornament */
+  .orn {
+    position: absolute;
+    pointer-events: none;
+  }
+
+  /* rule */
+  .rule { height: 1.5px; background: currentColor; opacity: 0.25; border: 0; }
+
+  /* ───── Animations ───── */
+  /* Every animation replays on slide enter because we toggle a
+     [data-anim-playing] attribute on the active slide via JS. */
+
+  /* Base state: hidden */
+  section.slide [data-anim="up"],
+  section.slide [data-anim="up-lg"],
+  section.slide [data-anim="fade"],
+  section.slide [data-anim="card"],
+  section.slide [data-anim="row"],
+  section.slide [data-anim="draw"],
+  section.slide [data-anim="drift-r"],
+  section.slide [data-anim="drift-l"],
+  section.slide [data-anim="spin"] {
+    opacity: 0;
+    transition: none;
+  }
+  section.slide [data-anim="up"]     { transform: translateY(16px); }
+  section.slide [data-anim="up-lg"]  { transform: translateY(32px); }
+  section.slide [data-anim="card"]   { transform: translateY(20px) scale(0.985); }
+  section.slide [data-anim="row"]    { transform: translateY(10px); }
+  section.slide [data-anim="draw"]   { transform: scaleX(0); transform-origin: left center; }
+  section.slide [data-anim="drift-r"] { transform: translate(80px, -40px) scale(1.05); }
+  section.slide [data-anim="drift-l"] { transform: translate(-80px, 40px) scale(1.05); }
+  section.slide [data-anim="spin"]   { transform: rotate(-90deg) scale(0.85); }
+
+  /* Active state: animate in with a per-element delay from --d */
+  section.slide[data-anim-playing] [data-anim] {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 700ms cubic-bezier(.2,.7,.2,1) var(--d, 0ms),
+      transform 900ms cubic-bezier(.2,.7,.2,1) var(--d, 0ms);
+  }
+  section.slide[data-anim-playing] [data-anim="draw"] {
+    transition:
+      opacity 400ms ease var(--d, 0ms),
+      transform 900ms cubic-bezier(.65,.05,.25,1) var(--d, 0ms);
+  }
+  section.slide[data-anim-playing] [data-anim="spin"] {
+    transition:
+      opacity 600ms ease var(--d, 0ms),
+      transform 1400ms cubic-bezier(.2,.7,.2,1) var(--d, 0ms);
+  }
+  section.slide[data-anim-playing] [data-anim="drift-r"],
+  section.slide[data-anim-playing] [data-anim="drift-l"] {
+    transition:
+      opacity 900ms ease var(--d, 0ms),
+      transform 1800ms cubic-bezier(.2,.7,.2,1) var(--d, 0ms);
+  }
+  /* Count-up numbers: keep layout stable, just fade+rise */
+  .count-up { font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+
+<deck-stage width="1920" height="1080">
+
+  <!-- ───────────── 01 COVER ───────────── -->
+  <section class="slide dark" data-label="Cover" style="padding:0;">
+    <!-- oversized yellow circle ornament -->
+    <img src="assets/circles-yellow-op.svg" class="orn" style="right:-180px; top:-180px; width:900px; opacity:1;" />
+    <img src="assets/circles-teal-op.svg" class="orn" style="left:-140px; bottom:-220px; width:640px; opacity:0.6;" />
+
+    <div style="padding:72px 100px 0; display:flex; justify-content:space-between; align-items:baseline;">
+      <div class="mono" style="font-size:24px; letter-spacing:0.22em; text-transform:uppercase; opacity:0.7;">
+        Internal Brand Concept · Issue 00
+      </div>
+      <div class="mono" style="font-size:24px; letter-spacing:0.22em; text-transform:uppercase; opacity:0.7;">
+        Prepared for Wade Weisz · April 2026
+      </div>
+    </div>
+
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:center; padding:0 100px;">
+      <div class="mono" style="font-size:24px; letter-spacing:0.28em; text-transform:uppercase; color:var(--yellow); margin-bottom:36px;">
+        A ForEyes Solutions Publication
+      </div>
+      <h1 class="serif" style="font-size:260px; line-height:0.88; letter-spacing:-0.03em; margin:0; font-weight:400;">
+        Behind<br/>the <em style="color:var(--yellow); font-style:italic;">Lens.</em>
+      </h1>
+      <div style="display:flex; align-items:center; gap:36px; margin-top:56px;">
+        <div style="width:120px; height:1.5px; background:var(--yellow);"></div>
+        <p class="serif" style="font-size:44px; font-style:italic; margin:0; letter-spacing:-0.01em;">
+          Inside the business of eyecare.
+        </p>
+      </div>
+    </div>
+
+    <div style="padding:0 100px 64px; display:flex; justify-content:space-between; align-items:flex-end;">
+      <div class="mono" style="font-size:24px; letter-spacing:0.2em; text-transform:uppercase; opacity:0.6; max-width:560px; line-height:1.6;">
+        An editorial publication<br/>for independent eyecare practice owners
+      </div>
+      <div class="mono" style="font-size:24px; letter-spacing:0.2em; text-transform:uppercase; opacity:0.6;">
+        Vol. I · No. 00 — Concept Review
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────── 02 THE OPPORTUNITY ───────────── -->
+  <section class="slide" data-label="The Opportunity">
+    <div class="masthead">
+      <div class="left">
+        <span class="mark"><span class="bt">Behind the Lens</span><em>Inside the business of eyecare</em></span>
+      </div>
+      <div class="right">No. 02 · The Opportunity</div>
+    </div>
+
+    <div style="flex:1; display:grid; grid-template-columns: 1fr 1fr; gap:100px; padding-top:80px; align-content:start;">
+      <div>
+        <div class="eyebrow" style="margin-bottom:32px;">The Opportunity</div>
+        <h2 class="section-title" style="margin-bottom:48px;">
+          Eyecare owners are<br/>reading <em>someone's</em><br/>content.
+        </h2>
+        <p class="serif" style="font-size:40px; line-height:1.18; letter-spacing:-0.005em; margin:0; max-width:640px;">
+          It just isn't ours.
+        </p>
+      </div>
+      <div style="padding-top:40px; display:flex; flex-direction:column; gap:36px;">
+        <p class="body" style="font-size:28px; line-height:1.5;">
+          The independent eyecare conversation today is dominated by frame reps, software vendors, and associations — all of whom stay neutral because they have to.
+        </p>
+        <p class="body" style="font-size:28px; line-height:1.5;">
+          ForEyes sits on something they don't: financial data from ~170 practices, a back-office view most owners never get, and opinions we're willing to put our name on.
+        </p>
+        <div style="display:flex; gap:48px; padding-top:12px; border-top:1.5px solid var(--dk-20);">
+          <div>
+            <div class="serif" style="font-size:72px; line-height:1; color:var(--navy);"><span class="count-up" data-target="170" data-suffix="">170</span><span style="color:var(--yellow);">+</span></div>
+            <div class="mono" style="font-size:14px; letter-spacing:0.18em; text-transform:uppercase; opacity:0.6; margin-top:8px;">Practices served</div>
+          </div>
+          <div>
+            <div class="serif" style="font-size:72px; line-height:1; color:var(--navy);"><span class="count-up" data-target="1">1</span></div>
+            <div class="mono" style="font-size:14px; letter-spacing:0.18em; text-transform:uppercase; opacity:0.6; margin-top:8px;">Vertical focus — eyecare</div>
+          </div>
+          <div>
+            <div class="serif" style="font-size:72px; line-height:1; color:var(--navy);"><span class="count-up" data-target="0">0</span></div>
+            <div class="mono" style="font-size:14px; letter-spacing:0.18em; text-transform:uppercase; opacity:0.6; margin-top:8px;">Frames to sell</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="folio"><span>Behind the Lens</span><span>02 / 10</span></div>
+  </section>
+
+  <!-- ───────────── 03 THE CONCEPT ───────────── -->
+  <section class="slide dark" data-label="The Concept">
+    <div class="masthead" style="color:var(--stone);">
+      <div class="left">
+        <span class="mark"><span class="bt" style="color:var(--yellow);">Behind the Lens</span><em>Inside the business of eyecare</em></span>
+      </div>
+      <div class="right">No. 03 · The Concept</div>
+    </div>
+
+    <div style="flex:1; display:grid; grid-template-columns: 1.1fr 1fr; gap:80px; padding-top:88px;">
+      <div>
+        <div class="eyebrow" style="margin-bottom:32px;">The Concept</div>
+        <h2 class="section-title" style="margin-bottom:56px;">
+          A branded editorial<br/>hub — not another<br/>marketing email.
+        </h2>
+        <p class="serif" style="font-size:32px; line-height:1.35; color:rgba(244,244,248,0.78); max-width:720px; margin:0;">
+          <em>Behind the Lens</em> is a monthly publication and blog for independent eyecare practice owners. It lives as a sub-brand of ForEyes Solutions — visually connected, editorially distinct.
+        </p>
+      </div>
+
+      <div class="card-panel" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.12); padding:56px; display:flex; flex-direction:column; gap:36px;">
+        <div class="mono" style="font-size:14px; letter-spacing:0.22em; text-transform:uppercase; color:var(--yellow);">The masthead</div>
+
+        <div>
+          <div class="mono" style="font-size:15px; letter-spacing:0.18em; text-transform:uppercase; opacity:0.5; margin-bottom:12px;">Name</div>
+          <div class="serif" style="font-size:56px; line-height:1; letter-spacing:-0.015em;">Behind the <em style="font-style:italic; color:var(--yellow);">Lens</em></div>
+        </div>
+
+        <hr class="rule" style="background:rgba(255,255,255,0.18);" />
+
+        <div>
+          <div class="mono" style="font-size:15px; letter-spacing:0.18em; text-transform:uppercase; opacity:0.5; margin-bottom:12px;">Tagline</div>
+          <div class="serif" style="font-size:38px; line-height:1.15; font-style:italic;">Inside the business of eyecare.</div>
+        </div>
+
+        <hr class="rule" style="background:rgba(255,255,255,0.18);" />
+
+        <div>
+          <div class="mono" style="font-size:15px; letter-spacing:0.18em; text-transform:uppercase; opacity:0.5; margin-bottom:12px;">Sender</div>
+          <div class="sans" style="font-size:26px; line-height:1.3;">Behind the Lens <span style="opacity:0.55;">by ForEyes Solutions</span></div>
+        </div>
+
+        <hr class="rule" style="background:rgba(255,255,255,0.18);" />
+
+        <div style="display:flex; gap:48px;">
+          <div>
+            <div class="mono" style="font-size:15px; letter-spacing:0.18em; text-transform:uppercase; opacity:0.5; margin-bottom:10px;">Cadence</div>
+            <div class="sans" style="font-size:24px;">Blog every 2 weeks</div>
+            <div class="sans" style="font-size:24px;">Newsletter monthly</div>
+          </div>
+          <div>
+            <div class="mono" style="font-size:15px; letter-spacing:0.18em; text-transform:uppercase; opacity:0.5; margin-bottom:10px;">Send day</div>
+            <div class="sans" style="font-size:24px;">1st or 2nd Tuesday</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="folio" style="color:var(--stone); opacity:0.5;"><span>Behind the Lens</span><span>03 / 10</span></div>
+  </section>
+
+  <!-- ───────────── 04 BRAND IDENTITY ───────────── -->
+  <section class="slide" data-label="Brand Identity">
+    <div class="masthead">
+      <div class="left">
+        <span class="mark"><span class="bt">Behind the Lens</span><em>Inside the business of eyecare</em></span>
+      </div>
+      <div class="right">No. 04 · Brand Identity</div>
+    </div>
+
+    <div style="flex:1; display:grid; grid-template-columns: 420px 1fr; gap:80px; padding-top:72px;">
+      <div>
+        <div class="eyebrow" style="margin-bottom:32px;">Brand Identity</div>
+        <h2 class="section-title" style="font-size:72px;">
+          Same family.<br/>Own voice.
+        </h2>
+        <p class="body" style="font-size:24px; line-height:1.5; margin-top:36px; max-width:380px;">
+          Rooted in the ForEyes palette. Editorial wordmark. Yellow promoted from accent to signature. An aperture-inspired monogram nods to the lens without being literal.
+        </p>
+      </div>
+
+      <!-- right: identity specimen grid -->
+      <div style="display:grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; gap:24px;">
+        <!-- Wordmark tile -->
+        <div class="id-tile" style="grid-column: 1 / span 2; background:var(--dk); color:var(--stone); padding:64px 72px; position:relative; overflow:hidden;">
+          <img src="assets/circles-yellow-op.svg" class="orn" style="right:-120px; top:-120px; width:420px;" />
+          <div class="mono" style="font-size:13px; letter-spacing:0.22em; text-transform:uppercase; opacity:0.5; margin-bottom:28px;">Wordmark</div>
+          <div class="serif" style="font-size:120px; line-height:0.9; letter-spacing:-0.02em; position:relative;">Behind the <em style="color:var(--yellow); font-style:italic;">Lens.</em></div>
+          <div class="mono" style="font-size:13px; letter-spacing:0.2em; text-transform:uppercase; opacity:0.45; margin-top:28px; border-top:1px solid rgba(255,255,255,0.15); padding-top:16px; display:flex; justify-content:space-between;">
+            <span>Instrument Serif · Italic Lens</span><span>Yellow #FCBA02</span>
+          </div>
+        </div>
+
+        <!-- Monogram tile (aperture) -->
+        <div class="id-tile" style="background:var(--yellow); padding:44px; position:relative; display:flex; flex-direction:column; justify-content:space-between;">
+          <div class="mono" style="font-size:13px; letter-spacing:0.22em; text-transform:uppercase; color:var(--dk); opacity:0.65;">Monogram · Aperture</div>
+          <div style="display:flex; align-items:center; justify-content:center; padding:20px 0;">
+            <!-- Aperture / lens mark built from overlapping circles + diaphragm triangles -->
+            <svg viewBox="0 0 260 300" width="240" height="276" fill="none">
+              <circle cx="130" cy="120" r="100" stroke="#110F2B" stroke-width="4"/>
+              <!-- six-bladed aperture -->
+              <g stroke="#110F2B" stroke-width="3" stroke-linejoin="round" fill="none">
+                <path d="M130 42 L200 82 L130 122 Z"/>
+                <path d="M200 82 L200 162 L130 122 Z"/>
+                <path d="M200 162 L130 202 L130 122 Z"/>
+                <path d="M130 202 L60 162 L130 122 Z"/>
+                <path d="M60 162 L60 82 L130 122 Z"/>
+                <path d="M60 82 L130 42 L130 122 Z"/>
+              </g>
+              <circle cx="130" cy="122" r="9" fill="#110F2B"/>
+              <!-- divider -->
+              <line x1="70" y1="252" x2="190" y2="252" stroke="#110F2B" stroke-width="1" opacity="0.4"/>
+              <!-- inner "BTL" -->
+              <text x="130" y="283" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="20" font-weight="600" letter-spacing="8" fill="#110F2B">B · T · L</text>
+            </svg>
+          </div>
+          <div class="mono" style="font-size:12px; letter-spacing:0.2em; text-transform:uppercase; color:var(--dk); opacity:0.55;">Six-blade aperture · BTL mark</div>
+        </div>
+
+        <!-- Palette tile -->
+        <div class="id-tile" style="background:var(--stone); border:1.5px solid var(--dk-10); padding:36px; display:flex; flex-direction:column; gap:20px;">
+          <div class="mono" style="font-size:13px; letter-spacing:0.22em; text-transform:uppercase; opacity:0.6;">Palette · Editorial use</div>
+          <div style="display:flex; flex-direction:column; gap:10px; flex:1;">
+            <div style="display:flex; align-items:center; gap:16px;"><div style="width:44px; height:44px; background:var(--dk);"></div><div><div class="sans" style="font-size:17px; font-weight:600;">Dark Navy</div><div class="mono" style="font-size:13px; opacity:0.55;">#110F2B · base & type</div></div></div>
+            <div style="display:flex; align-items:center; gap:16px;"><div style="width:44px; height:44px; background:var(--stone); border:1px solid var(--dk-20);"></div><div><div class="sans" style="font-size:17px; font-weight:600;">Stone</div><div class="mono" style="font-size:13px; opacity:0.55;">#F4F4F8 · canvas</div></div></div>
+            <div style="display:flex; align-items:center; gap:16px;"><div style="width:44px; height:44px; background:var(--yellow);"></div><div><div class="sans" style="font-size:17px; font-weight:600;">Yellow <span class="mono" style="font-size:13px; opacity:0.6; font-weight:400;">signature</span></div><div class="mono" style="font-size:13px; opacity:0.55;">#FCBA02 · hero accent</div></div></div>
+            <div style="display:flex; align-items:center; gap:16px;"><div style="width:44px; height:44px; background:var(--navy);"></div><div><div class="sans" style="font-size:17px; font-weight:600;">Navy</div><div class="mono" style="font-size:13px; opacity:0.55;">#415D9E · support</div></div></div>
+            <div style="display:flex; align-items:center; gap:16px;"><div style="width:44px; height:44px; background:var(--teal);"></div><div><div class="sans" style="font-size:17px; font-weight:600;">Teal</div><div class="mono" style="font-size:13px; opacity:0.55;">#51A0AD · support</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="folio"><span>Behind the Lens</span><span>04 / 10</span></div>
+  </section>
+
+  <!-- ───────────── 05 CONTENT PILLARS ───────────── -->
+  <section class="slide" data-label="Content Pillars">
+    <div class="masthead">
+      <div class="left">
+        <span class="mark"><span class="bt">Behind the Lens</span><em>Inside the business of eyecare</em></span>
+      </div>
+      <div class="right">No. 05 · Content Pillars</div>
+    </div>
+
+    <div style="padding-top:52px; display:grid; grid-template-columns: 380px 1fr; gap:72px; flex:1;">
+      <div>
+        <div class="eyebrow" style="margin-bottom:28px;">Content Pillars</div>
+        <h2 class="section-title" style="font-size:64px; line-height:1;">
+          Seven desks.<br/>One masthead.
+        </h2>
+        <p class="body" style="font-size:22px; line-height:1.5; margin-top:28px;">
+          Every piece of content lives under one of these seven pillars. They scope what we publish, and what we don't.
+        </p>
+      </div>
+
+      <div style="display:grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap:14px;">
+        <!-- Pillar cards -->
+        <div class="pillar" style="background:var(--dk); color:var(--stone); padding:28px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div class="mono" style="font-size:12px; letter-spacing:0.22em; text-transform:uppercase; opacity:0.5;">№ 01</div>
+          <div>
+            <div class="serif" style="font-size:38px; line-height:1; letter-spacing:-0.01em;">The Numbers</div>
+            <div class="sans" style="font-size:15px; line-height:1.45; opacity:0.7; margin-top:12px;">Financial insight, benchmarks, and KPIs for practice owners.</div>
+          </div>
+        </div>
+        <div class="pillar" style="background:var(--dk); color:var(--stone); padding:28px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div class="mono" style="font-size:12px; letter-spacing:0.22em; text-transform:uppercase; opacity:0.5;">№ 02</div>
+          <div>
+            <div class="serif" style="font-size:38px; line-height:1; letter-spacing:-0.01em;">Running the Practice</div>
+            <div class="sans" style="font-size:15px; line-height:1.45; opacity:0.7; margin-top:12px;">Operations, staffing, and systems — tactical and practical.</div>
+          </div>
+        </div>
+        <div class="pillar" style="background:var(--dk); color:var(--stone); padding:28px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div class="mono" style="font-size:12px; letter-spacing:0.22em; text-transform:uppercase; opacity:0.5;">№ 03</div>
+          <div>
+            <div class="serif" style="font-size:38px; line-height:1; letter-spacing:-0.01em;">The Tax Corner</div>
+            <div class="sans" style="font-size:15px; line-height:1.45; opacity:0.7; margin-top:12px;">Tax strategy for practice owners — seasonal and evergreen.</div>
+          </div>
+        </div>
+        <div class="pillar" style="background:var(--dk); color:var(--stone); padding:28px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div class="mono" style="font-size:12px; letter-spacing:0.22em; text-transform:uppercase; opacity:0.5;">№ 04</div>
+          <div>
+            <div class="serif" style="font-size:38px; line-height:1; letter-spacing:-0.01em;">Billing & Collections</div>
+            <div class="sans" style="font-size:15px; line-height:1.45; opacity:0.7; margin-top:12px;">Insurance billing, RCM, and collections strategy.</div>
+          </div>
+        </div>
+        <div class="pillar" style="background:var(--dk); color:var(--stone); padding:28px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div class="mono" style="font-size:12px; letter-spacing:0.22em; text-transform:uppercase; opacity:0.5;">№ 05</div>
+          <div>
+            <div class="serif" style="font-size:38px; line-height:1; letter-spacing:-0.01em;">Growth & Scale</div>
+            <div class="sans" style="font-size:15px; line-height:1.45; opacity:0.7; margin-top:12px;">Buying, expanding, cold starts, and adding locations.</div>
+          </div>
+        </div>
+        <div class="pillar" style="background:var(--yellow); color:var(--dk); padding:28px; display:flex; flex-direction:column; justify-content:space-between; position:relative; overflow:hidden;">
+          <img src="assets/circles-darknavy-op.svg" class="orn" style="right:-60px; bottom:-60px; width:160px; opacity:0.9;" />
+          <div class="mono" style="font-size:12px; letter-spacing:0.22em; text-transform:uppercase; opacity:0.6;">№ 06</div>
+          <div style="position:relative;">
+            <div class="serif" style="font-size:38px; line-height:1; letter-spacing:-0.01em;">OD Spotlight</div>
+            <div class="sans" style="font-size:15px; line-height:1.45; opacity:0.8; margin-top:12px;">Client stories, peer interviews, and real-world wins.</div>
+          </div>
+        </div>
+        <div class="pillar" style="background:var(--dk); color:var(--stone); padding:28px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div class="mono" style="font-size:12px; letter-spacing:0.22em; text-transform:uppercase; opacity:0.5;">№ 07</div>
+          <div>
+            <div class="serif" style="font-size:38px; line-height:1; letter-spacing:-0.01em;">Partner Spotlight</div>
+            <div class="sans" style="font-size:15px; line-height:1.45; opacity:0.7; margin-top:12px;">Features on vetted ForEyes partners in the eyecare ecosystem.</div>
+          </div>
+        </div>
+        <!-- 8th = meta tile -->
+        <div class="meta-tile" style="background:transparent; border:1.5px solid var(--dk-20); padding:28px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div class="mono" style="font-size:12px; letter-spacing:0.22em; text-transform:uppercase; opacity:0.55;">Editorial rule</div>
+          <div>
+            <div class="serif" style="font-size:32px; line-height:1.05; letter-spacing:-0.01em;">Every piece ladders to one pillar.</div>
+            <div class="sans" style="font-size:14px; line-height:1.45; opacity:0.65; margin-top:12px;">No pillar, no publish.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="folio"><span>Behind the Lens</span><span>05 / 10</span></div>
+  </section>
+
+  <!-- ───────────── 06 ISSUE ANATOMY ───────────── -->
+  <section class="slide" data-label="Issue Anatomy">
+    <div class="masthead">
+      <div class="left">
+        <span class="mark"><span class="bt">Behind the Lens</span><em>Inside the business of eyecare</em></span>
+      </div>
+      <div class="right">No. 06 · Issue Anatomy</div>
+    </div>
+
+    <div style="padding-top:52px; display:grid; grid-template-columns: 1fr 720px; gap:80px; flex:1; align-items:start;">
+      <div>
+        <div class="eyebrow" style="margin-bottom:28px;">Issue Anatomy</div>
+        <h2 class="section-title" style="font-size:72px;">Four sections.<br/>Same order.<br/>Every issue.</h2>
+        <p class="body" style="font-size:24px; line-height:1.5; margin-top:36px; max-width:500px;">
+          Readers learn the rhythm. A practice owner who skims the third issue knows where to find the numbers, the partner, and the close.
+        </p>
+
+        <div style="display:flex; flex-direction:column; gap:18px; margin-top:48px;">
+          <div class="toc-item" style="display:flex; gap:20px; align-items:baseline;">
+            <span class="mono" style="font-size:15px; color:var(--yellow); letter-spacing:0.2em;">I.</span>
+            <div>
+              <div class="serif" style="font-size:34px; line-height:1.1;">The Lead</div>
+              <div class="sans" style="font-size:17px; opacity:0.7;">One featured anchor article.</div>
+            </div>
+          </div>
+          <div class="toc-item" style="display:flex; gap:20px; align-items:baseline;">
+            <span class="mono" style="font-size:15px; color:var(--yellow); letter-spacing:0.2em;">II.</span>
+            <div>
+              <div class="serif" style="font-size:34px; line-height:1.1;">Quick Hits</div>
+              <div class="sans" style="font-size:17px; opacity:0.7;">Two to three short, practical items.</div>
+            </div>
+          </div>
+          <div class="toc-item" style="display:flex; gap:20px; align-items:baseline;">
+            <span class="mono" style="font-size:15px; color:var(--yellow); letter-spacing:0.2em;">III.</span>
+            <div>
+              <div class="serif" style="font-size:34px; line-height:1.1;">Partner Spotlight</div>
+              <div class="sans" style="font-size:17px; opacity:0.7;">One vetted ForEyes partner feature.</div>
+            </div>
+          </div>
+          <div class="toc-item" style="display:flex; gap:20px; align-items:baseline;">
+            <span class="mono" style="font-size:15px; color:var(--yellow); letter-spacing:0.2em;">IV.</span>
+            <div>
+              <div class="serif" style="font-size:34px; line-height:1.1;">From the Back Office</div>
+              <div class="sans" style="font-size:17px; opacity:0.7;">A closing thought from the ForEyes team.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- fake issue mockup -->
+      <div class="issue-mock" style="background:#fff; box-shadow: 0 40px 80px -20px rgba(17,15,43,0.25), 0 8px 24px rgba(17,15,43,0.08); padding:44px 44px 36px; height:780px; display:flex; flex-direction:column; position:relative;">
+        <!-- masthead of fake issue -->
+        <div style="border-bottom:1.5px solid var(--dk); padding-bottom:16px; display:flex; justify-content:space-between; align-items:flex-end;">
+          <div>
+            <div class="mono" style="font-size:10px; letter-spacing:0.22em; text-transform:uppercase; opacity:0.6;">A ForEyes Solutions Publication</div>
+            <div class="serif" style="font-size:40px; line-height:1; letter-spacing:-0.015em; margin-top:4px; white-space:nowrap;">Behind the <em style="font-style:italic;">Lens.</em></div>
+          </div>
+          <div class="mono" style="font-size:10px; letter-spacing:0.2em; text-transform:uppercase; opacity:0.6; text-align:right; line-height:1.7;">Vol. I · No. 03<br/>May 5 · 2026</div>
+        </div>
+
+        <!-- lead -->
+        <div style="margin-top:20px;">
+          <div class="mono" style="font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:var(--yellow); font-weight:600;">I · THE LEAD</div>
+          <div class="serif" style="font-size:28px; line-height:1.1; letter-spacing:-0.01em; margin-top:6px;">What your P&L is actually telling you.</div>
+          <div class="sans" style="font-size:13px; line-height:1.5; opacity:0.75; margin-top:8px;">Three income-statement lines that signal margin, staffing, and the next 12 months.</div>
+        </div>
+
+        <div style="margin-top:18px; border-top:1px solid var(--dk-20); padding-top:14px;">
+          <div class="mono" style="font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:var(--yellow); font-weight:600;">II · QUICK HITS</div>
+          <div style="display:flex; flex-direction:column; gap:14px; margin-top:10px;">
+            <div style="display:flex; gap:10px; align-items:baseline;"><div class="serif" style="font-size:17px; color:var(--navy); line-height:1;">·</div><div class="serif" style="font-size:17px; line-height:1.25; white-space:nowrap;">The billing denial you keep eating.</div></div>
+            <div style="display:flex; gap:10px; align-items:baseline;"><div class="serif" style="font-size:17px; color:var(--navy); line-height:1;">·</div><div class="serif" style="font-size:17px; line-height:1.25; white-space:nowrap;">Staff comp benchmarks, Q2.</div></div>
+            <div style="display:flex; gap:10px; align-items:baseline;"><div class="serif" style="font-size:17px; color:var(--navy); line-height:1;">·</div><div class="serif" style="font-size:17px; line-height:1.25; white-space:nowrap;">Reading a valuation letter.</div></div>
+          </div>
+        </div>
+
+        <div style="margin-top:22px; border-top:1px solid var(--dk-20); padding-top:18px; background:var(--stone); margin-left:-44px; margin-right:-44px; padding-left:44px; padding-right:44px; padding-top:20px; padding-bottom:20px;">
+          <div class="mono" style="font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:var(--navy); font-weight:600;">III · PARTNER SPOTLIGHT</div>
+          <div class="serif" style="font-size:22px; line-height:1.15; margin-top:6px;">A vetted partner, not an ad. <span style="opacity:0.55;">Featured: this month's guest.</span></div>
+        </div>
+
+        <div style="margin-top:22px; padding-top:18px; border-top:1px solid var(--dk-20); flex:1; display:flex; flex-direction:column; justify-content:flex-end;">
+          <div class="mono" style="font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:var(--yellow); font-weight:600;">IV · FROM THE BACK OFFICE</div>
+          <div class="serif" style="font-size:20px; line-height:1.3; font-style:italic; margin-top:8px; opacity:0.85;">"The back office isn't plumbing. It's the competitive moat no vendor will ever build for you." — ForEyes</div>
+        </div>
+      </div>
+    </div>
+    <div class="folio"><span>Behind the Lens</span><span>06 / 10</span></div>
+  </section>
+
+  <!-- ───────────── 07 EDITORIAL VOICE ───────────── -->
+  <section class="slide yellow" data-label="Editorial Voice">
+    <div class="masthead" style="color:var(--dk); border-color:var(--dk);">
+      <div class="left">
+        <span class="mark"><span class="bt">Behind the Lens</span><em>Inside the business of eyecare</em></span>
+      </div>
+      <div class="right">No. 07 · Editorial Voice</div>
+    </div>
+
+    <div style="padding-top:64px; display:grid; grid-template-columns: 1.2fr 1fr; gap:100px; flex:1;">
+      <div>
+        <div class="mono" style="font-size:18px; letter-spacing:0.2em; text-transform:uppercase; color:var(--dk); opacity:0.7; margin-bottom:28px;">Editorial Voice</div>
+        <h2 class="section-title" style="font-size:104px; line-height:0.96;">
+          Straight-talking,<br/>
+          <em>not stuffy.</em>
+        </h2>
+        <div style="width:180px; height:2px; background:var(--dk); margin:44px 0;"></div>
+        <p class="serif" style="font-size:36px; line-height:1.2; letter-spacing:-0.005em; max-width:680px; margin:0;">
+          An independent, opinionated, practice-owner-minded voice that isn't selling frames or software.
+        </p>
+      </div>
+
+      <div style="padding-top:40px; display:flex; flex-direction:column; gap:0;">
+        <div class="mono" style="font-size:14px; letter-spacing:0.22em; text-transform:uppercase; opacity:0.65; margin-bottom:20px;">Voice rules</div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0; border-top:1.5px solid var(--dk);">
+          <!-- Is / Isn't columns header -->
+          <div style="padding:14px 20px 14px 0; border-bottom:1.5px solid var(--dk);">
+            <div class="mono" style="font-size:13px; letter-spacing:0.2em; text-transform:uppercase;">It is</div>
+          </div>
+          <div style="padding:14px 0 14px 20px; border-bottom:1.5px solid var(--dk); border-left:1.5px solid var(--dk);">
+            <div class="mono" style="font-size:13px; letter-spacing:0.2em; text-transform:uppercase; opacity:0.55;">It isn't</div>
+          </div>
+
+          <div class="voice-row is" style="padding:22px 20px 22px 0; border-bottom:1px solid var(--dk-20);"><div class="serif" style="font-size:28px; line-height:1.15;">Confident, opinionated</div></div>
+          <div class="voice-row isnt" style="padding:22px 0 22px 20px; border-bottom:1px solid var(--dk-20); border-left:1.5px solid var(--dk);"><div class="serif" style="font-size:28px; line-height:1.15; opacity:0.5; text-decoration:line-through; text-decoration-color:var(--dk-40);">Preachy, hedging</div></div>
+
+          <div class="voice-row is" style="padding:22px 20px 22px 0; border-bottom:1px solid var(--dk-20);"><div class="serif" style="font-size:28px; line-height:1.15;">Practice-first</div></div>
+          <div class="voice-row isnt" style="padding:22px 0 22px 20px; border-bottom:1px solid var(--dk-20); border-left:1.5px solid var(--dk);"><div class="serif" style="font-size:28px; line-height:1.15; opacity:0.5; text-decoration:line-through; text-decoration-color:var(--dk-40);">Firm-first</div></div>
+
+          <div class="voice-row is" style="padding:22px 20px 22px 0; border-bottom:1px solid var(--dk-20);"><div class="serif" style="font-size:28px; line-height:1.15;">Grounded in eyecare</div></div>
+          <div class="voice-row isnt" style="padding:22px 0 22px 20px; border-bottom:1px solid var(--dk-20); border-left:1.5px solid var(--dk);"><div class="serif" style="font-size:28px; line-height:1.15; opacity:0.5; text-decoration:line-through; text-decoration-color:var(--dk-40);">Generic small-biz advice</div></div>
+
+          <div class="voice-row is" style="padding:22px 20px 22px 0;"><div class="serif" style="font-size:28px; line-height:1.15;">Plain-spoken</div></div>
+          <div class="voice-row isnt" style="padding:22px 0 22px 20px; border-left:1.5px solid var(--dk);"><div class="serif" style="font-size:28px; line-height:1.15; opacity:0.5; text-decoration:line-through; text-decoration-color:var(--dk-40);">Corporate, stuffy</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="folio" style="color:var(--dk); opacity:0.55;"><span>Behind the Lens</span><span>07 / 10</span></div>
+  </section>
+
+  <!-- ───────────── 08 CONTENT LINEUP ───────────── -->
+  <section class="slide" data-label="Content Lineup">
+    <div class="masthead">
+      <div class="left">
+        <span class="mark"><span class="bt">Behind the Lens</span><em>Inside the business of eyecare</em></span>
+      </div>
+      <div class="right">No. 08 · Content Lineup</div>
+    </div>
+
+    <div style="padding-top:52px; flex:1; display:flex; flex-direction:column;">
+      <div style="display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:36px;">
+        <div>
+          <div class="eyebrow" style="margin-bottom:20px;">Content Lineup</div>
+          <h2 class="section-title" style="font-size:72px;">A first-quarter <em>draft slate.</em></h2>
+        </div>
+        <p class="body" style="font-size:20px; line-height:1.5; max-width:380px; opacity:0.75;">
+          Not a promise — a shape. Headlines that show the kind of publication this is the first issue of.
+        </p>
+      </div>
+
+      <!-- lineup table -->
+      <div style="flex:1; display:flex; flex-direction:column; border-top:1.5px solid var(--dk);">
+        <!-- row header -->
+        <div style="display:grid; grid-template-columns: 80px 1fr 220px 150px; padding:14px 0; border-bottom:1.5px solid var(--dk); font-family: 'JetBrains Mono', monospace; font-size:13px; letter-spacing:0.2em; text-transform:uppercase; opacity:0.6;">
+          <div>No.</div><div>Headline</div><div>Pillar</div><div style="text-align:right;">Format</div>
+        </div>
+
+        <!-- rows -->
+        <div class="lrow" style="display:grid; grid-template-columns: 80px 1fr 220px 150px; padding:20px 0; border-bottom:1px solid var(--dk-20); align-items:baseline;">
+          <div class="mono" style="font-size:15px; opacity:0.55;">01</div>
+          <div class="serif" style="font-size:32px; line-height:1.1;">The State of the Independent Eyecare Practice</div>
+          <div class="mono" style="font-size:14px; letter-spacing:0.12em; text-transform:uppercase; color:var(--navy);">The Numbers</div>
+          <div class="mono" style="font-size:14px; opacity:0.6; text-align:right;">Lead · Anchor</div>
+        </div>
+        <div class="lrow" style="display:grid; grid-template-columns: 80px 1fr 220px 150px; padding:20px 0; border-bottom:1px solid var(--dk-20); align-items:baseline;">
+          <div class="mono" style="font-size:15px; opacity:0.55;">02</div>
+          <div class="serif" style="font-size:32px; line-height:1.1;">What your P&L is actually telling you</div>
+          <div class="mono" style="font-size:14px; letter-spacing:0.12em; text-transform:uppercase; color:var(--navy);">The Numbers</div>
+          <div class="mono" style="font-size:14px; opacity:0.6; text-align:right;">Lead</div>
+        </div>
+        <div class="lrow" style="display:grid; grid-template-columns: 80px 1fr 220px 150px; padding:20px 0; border-bottom:1px solid var(--dk-20); align-items:baseline; background:rgba(252,186,2,0.10);">
+          <div class="mono" style="font-size:15px; opacity:0.55;">03</div>
+          <div class="serif" style="font-size:32px; line-height:1.1;">Why the back office is your biggest competitive advantage</div>
+          <div class="mono" style="font-size:14px; letter-spacing:0.12em; text-transform:uppercase; color:var(--navy);">Running the Practice</div>
+          <div class="mono" style="font-size:14px; opacity:0.6; text-align:right;">Lead · Feature</div>
+        </div>
+        <div class="lrow" style="display:grid; grid-template-columns: 80px 1fr 220px 150px; padding:20px 0; border-bottom:1px solid var(--dk-20); align-items:baseline;">
+          <div class="mono" style="font-size:15px; opacity:0.55;">04</div>
+          <div class="serif" style="font-size:32px; line-height:1.1;">The top billing mistakes independent practices make</div>
+          <div class="mono" style="font-size:14px; letter-spacing:0.12em; text-transform:uppercase; color:var(--navy);">Billing & Collections</div>
+          <div class="mono" style="font-size:14px; opacity:0.6; text-align:right;">Quick Hits</div>
+        </div>
+        <div class="lrow" style="display:grid; grid-template-columns: 80px 1fr 220px 150px; padding:20px 0; border-bottom:1px solid var(--dk-20); align-items:baseline;">
+          <div class="mono" style="font-size:15px; opacity:0.55;">05</div>
+          <div class="serif" style="font-size:32px; line-height:1.1;">Benchmarks every OD should know</div>
+          <div class="mono" style="font-size:14px; letter-spacing:0.12em; text-transform:uppercase; color:var(--navy);">The Numbers</div>
+          <div class="mono" style="font-size:14px; opacity:0.6; text-align:right;">Evergreen</div>
+        </div>
+        <div class="lrow" style="display:grid; grid-template-columns: 80px 1fr 220px 150px; padding:20px 0; border-bottom:1px solid var(--dk-20); align-items:baseline;">
+          <div class="mono" style="font-size:15px; opacity:0.55;">06</div>
+          <div class="serif" style="font-size:32px; line-height:1.1;">Cold start vs. acquisition — what the numbers actually look like</div>
+          <div class="mono" style="font-size:14px; letter-spacing:0.12em; text-transform:uppercase; color:var(--navy);">Growth & Scale</div>
+          <div class="mono" style="font-size:14px; opacity:0.6; text-align:right;">Lead</div>
+        </div>
+        <div class="lrow" style="display:grid; grid-template-columns: 80px 1fr 220px 150px; padding:20px 0; align-items:baseline;">
+          <div class="mono" style="font-size:15px; opacity:0.55;">07</div>
+          <div class="serif" style="font-size:32px; line-height:1.1;">Staff compensation benchmarks in eyecare</div>
+          <div class="mono" style="font-size:14px; letter-spacing:0.12em; text-transform:uppercase; color:var(--navy);">Running the Practice</div>
+          <div class="mono" style="font-size:14px; opacity:0.6; text-align:right;">Feature</div>
+        </div>
+      </div>
+    </div>
+    <div class="folio"><span>Behind the Lens</span><span>08 / 10</span></div>
+  </section>
+
+  <!-- ───────────── 09 LAUNCH PLAN ───────────── -->
+  <section class="slide dark" data-label="Launch Plan">
+    <div class="masthead" style="color:var(--stone);">
+      <div class="left">
+        <span class="mark"><span class="bt" style="color:var(--yellow);">Behind the Lens</span><em>Inside the business of eyecare</em></span>
+      </div>
+      <div class="right">No. 09 · Launch Plan</div>
+    </div>
+
+    <div style="padding-top:52px; flex:1; display:flex; flex-direction:column;">
+      <div style="display:grid; grid-template-columns: 460px 1fr; gap:80px; margin-bottom:56px; align-items:end;">
+        <div>
+          <div class="eyebrow" style="margin-bottom:20px; color:var(--yellow);">Launch Plan</div>
+          <h2 class="section-title" style="font-size:76px;">90 days<br/>to Issue No. 01.</h2>
+        </div>
+        <p class="body" style="font-size:22px; line-height:1.5; opacity:0.75; max-width:560px;">
+          Four phases across a 90-day runway. Ownership on each. We are not launching a campaign; we are standing up a publication.
+        </p>
+      </div>
+
+      <!-- timeline -->
+      <div style="flex:1; display:grid; grid-template-columns: repeat(4, 1fr); gap:2px; background:rgba(255,255,255,0.12);">
+        <div class="phase" style="background:var(--dk); padding:36px 32px 40px; display:flex; flex-direction:column; gap:20px; position:relative;">
+          <div class="mono" style="font-size:13px; letter-spacing:0.22em; text-transform:uppercase; opacity:0.55;">T − 90 days</div>
+          <div class="serif" style="font-size:44px; line-height:1; color:var(--yellow);">01</div>
+          <div class="serif" style="font-size:32px; line-height:1.1;">Foundation</div>
+          <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px;">
+            <li class="sans" style="font-size:17px; line-height:1.4; opacity:0.82;">— Lock identity & wordmark</li>
+            <li class="sans" style="font-size:17px; line-height:1.4; opacity:0.82;">— Brief the team</li>
+            <li class="sans" style="font-size:17px; line-height:1.4; opacity:0.82;">— Build signup page</li>
+            <li class="sans" style="font-size:17px; line-height:1.4; opacity:0.82;">— Start writing first two blog posts</li>
+          </ul>
+        </div>
+        <div class="phase" style="background:var(--dk); padding:36px 32px 40px; display:flex; flex-direction:column; gap:20px;">
+          <div class="mono" style="font-size:13px; letter-spacing:0.22em; text-transform:uppercase; opacity:0.55;">T − 60 days</div>
+          <div class="serif" style="font-size:44px; line-height:1; color:var(--yellow);">02</div>
+          <div class="serif" style="font-size:32px; line-height:1.1;">Content Ready</div>
+          <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px;">
+            <li class="sans" style="font-size:17px; line-height:1.4; opacity:0.82;">— First two posts written & published</li>
+            <li class="sans" style="font-size:17px; line-height:1.4; opacity:0.82;">— Newsletter template finalized</li>
+            <li class="sans" style="font-size:17px; line-height:1.4; opacity:0.82;">— First Partner Spotlight secured</li>
+            <li class="sans" style="font-size:17px; line-height:1.4; opacity:0.82;">— Teaser email from Wade to clients</li>
+          </ul>
+        </div>
+        <div class="phase" style="background:var(--dk); padding:36px 32px 40px; display:flex; flex-direction:column; gap:20px;">
+          <div class="mono" style="font-size:13px; letter-spacing:0.22em; text-transform:uppercase; opacity:0.55;">T − 30 days</div>
+          <div class="serif" style="font-size:44px; line-height:1; color:var(--yellow);">03</div>
+          <div class="serif" style="font-size:32px; line-height:1.1;">Tease & Prime</div>
+          <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px;">
+            <li class="sans" style="font-size:17px; line-height:1.4; opacity:0.82;">— Notify partner network</li>
+            <li class="sans" style="font-size:17px; line-height:1.4; opacity:0.82;">— Configure email sender</li>
+            <li class="sans" style="font-size:17px; line-height:1.4; opacity:0.82;">— Warm the domain</li>
+          </ul>
+        </div>
+        <div class="phase launch" style="background:var(--yellow); color:var(--dk); padding:36px 32px 40px; display:flex; flex-direction:column; gap:20px; position:relative; overflow:hidden;">
+          <img src="assets/circles-darknavy-op.svg" class="orn" style="right:-100px; bottom:-100px; width:280px; opacity:0.9;" />
+          <div class="mono" style="font-size:13px; letter-spacing:0.22em; text-transform:uppercase; opacity:0.7;">Launch week</div>
+          <div class="serif" style="font-size:44px; line-height:1;">04</div>
+          <div class="serif" style="font-size:32px; line-height:1.1;">Ship Issue No. 01</div>
+          <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; position:relative;">
+            <li class="sans" style="font-size:17px; line-height:1.4;">— Send Issue 01</li>
+            <li class="sans" style="font-size:17px; line-height:1.4;">— Social announce</li>
+            <li class="sans" style="font-size:17px; line-height:1.4;">— Leadership outreach</li>
+            <li class="sans" style="font-size:17px; line-height:1.4;">— Wade's video intro</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="folio" style="color:var(--stone); opacity:0.5;"><span>Behind the Lens</span><span>09 / 10</span></div>
+  </section>
+
+  <!-- ───────────── 10 NEXT STEPS ───────────── -->
+  <section class="slide" data-label="Next Steps">
+    <div class="masthead">
+      <div class="left">
+        <span class="mark"><span class="bt">Behind the Lens</span><em>Inside the business of eyecare</em></span>
+      </div>
+      <div class="right">No. 10 · Next Steps</div>
+    </div>
+
+    <div style="padding-top:64px; display:grid; grid-template-columns: 1fr 1fr; gap:100px; flex:1;">
+      <div style="position:relative;">
+        <img src="assets/circles-yellow-op.svg" class="orn" style="left:-120px; bottom:-140px; width:520px; z-index:0;" />
+        <div style="position:relative;">
+          <div class="eyebrow" style="margin-bottom:28px;">Next Steps</div>
+          <h2 class="section-title" style="font-size:104px; line-height:0.96;">
+            What we need<br/>from you, <em>Wade.</em>
+          </h2>
+          <p class="serif" style="font-size:32px; line-height:1.25; margin-top:44px; max-width:600px; opacity:0.8;">
+            Three decisions unlock the 90-day clock. Nothing else is blocked on you.
+          </p>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:0; padding-top:24px;">
+        <div class="step-row" style="border-top:1.5px solid var(--dk); padding:32px 0 32px; display:grid; grid-template-columns: 80px 1fr; gap:28px;">
+          <div class="serif" style="font-size:64px; line-height:0.9; color:var(--navy);">01</div>
+          <div>
+            <div class="serif" style="font-size:36px; line-height:1.1; margin-bottom:10px;">Green-light the concept.</div>
+            <div class="sans" style="font-size:19px; line-height:1.5; opacity:0.72;">Name, tagline, sub-brand approach, and editorial identity direction approved as a system.</div>
+          </div>
+        </div>
+        <div class="step-row" style="border-top:1px solid var(--dk-20); padding:32px 0 32px; display:grid; grid-template-columns: 80px 1fr; gap:28px;">
+          <div class="serif" style="font-size:64px; line-height:0.9; color:var(--navy);">02</div>
+          <div>
+            <div class="serif" style="font-size:36px; line-height:1.1; margin-bottom:10px;">Pick Issue No. 01's anchor.</div>
+            <div class="sans" style="font-size:19px; line-height:1.5; opacity:0.72;">One of the three anchor drafts on slide 08. We'll build the issue around it.</div>
+          </div>
+        </div>
+        <div class="step-row" style="border-top:1px solid var(--dk-20); border-bottom:1.5px solid var(--dk); padding:32px 0 32px; display:grid; grid-template-columns: 80px 1fr; gap:28px;">
+          <div class="serif" style="font-size:64px; line-height:0.9; color:var(--navy);">03</div>
+          <div>
+            <div class="serif" style="font-size:36px; line-height:1.1; margin-bottom:10px;">Block 60 minutes for a launch-week video.</div>
+            <div class="sans" style="font-size:19px; line-height:1.5; opacity:0.72;">A short intro from you.</div>
+          </div>
+        </div>
+
+        <div class="closing-bar" style="margin-top:48px; background:var(--dk); color:var(--stone); padding:36px 40px; display:flex; justify-content:space-between; align-items:center;">
+          <div class="serif" style="font-size:32px; line-height:1.1; font-style:italic;">"Inside the business of eyecare."</div>
+          <div class="mono" style="font-size:13px; letter-spacing:0.22em; text-transform:uppercase; color:var(--yellow);">Issue 01 → Q3 2026</div>
+        </div>
+      </div>
+    </div>
+    <div class="folio"><span>Behind the Lens</span><span>10 / 10 · End</span></div>
+  </section>
+
+</deck-stage>
+
+<script>
+/* ───────── Animation orchestrator ─────────
+   On every slidechange (including initial), tag elements inside the
+   incoming slide with data-anim + --d (delay) attributes, set
+   data-anim-playing on the slide to trigger the CSS transitions,
+   and drive any count-up numbers. Animations replay on every entry.
+*/
+(function() {
+  const stage = document.querySelector('deck-stage');
+  if (!stage) return;
+
+  // Per-slide animation recipes, keyed by data-label.
+  // Each recipe: array of [selector, anim, delayMs]. First match wins per element.
+  const RECIPES = {
+    'Cover': [
+      ['img.orn:nth-of-type(1)', 'drift-r', 0],
+      ['img.orn:nth-of-type(2)', 'drift-l', 120],
+      ['.mono', 'up', 150],
+      ['h1.serif', 'up-lg', 350],
+      ['p.serif', 'fade', 750],
+      ['div[style*="width:120px"]', 'draw', 700],
+    ],
+    'The Opportunity': [
+      ['.masthead', 'draw', 0],
+      ['.eyebrow', 'up', 200],
+      ['h2', 'up-lg', 300],
+      ['p.serif', 'up', 500],
+      ['p.body', 'up', 600],
+      ['.count-up', 'up', 800],
+      ['.folio', 'fade', 900],
+    ],
+    'The Concept': [
+      ['.masthead', 'draw', 0],
+      ['.eyebrow', 'up', 200],
+      ['h2', 'up-lg', 300],
+      ['p.serif', 'up', 550],
+      ['.card-panel', 'card', 500],
+      ['.folio', 'fade', 900],
+    ],
+    'Brand Identity': [
+      ['.masthead', 'draw', 0],
+      ['.eyebrow', 'up', 200],
+      ['h2', 'up-lg', 300],
+      ['p.body', 'up', 500],
+      ['.id-tile', 'card', 450],
+      ['svg', 'spin', 900],
+      ['.folio', 'fade', 900],
+    ],
+    'Content Pillars': [
+      ['.masthead', 'draw', 0],
+      ['.eyebrow', 'up', 200],
+      ['h2', 'up-lg', 300],
+      ['p.body', 'up', 500],
+      ['.pillar, .meta-tile', 'card', 450],
+      ['.folio', 'fade', 1200],
+    ],
+    'Issue Anatomy': [
+      ['.masthead', 'draw', 0],
+      ['.eyebrow', 'up', 200],
+      ['h2', 'up-lg', 300],
+      ['p.body', 'up', 500],
+      ['.toc-item', 'row', 500],
+      ['.issue-mock', 'card', 400],
+      ['.folio', 'fade', 1200],
+    ],
+    'Editorial Voice': [
+      ['.masthead', 'draw', 0],
+      ['.mono', 'up', 200],
+      ['h2', 'up-lg', 300],
+      ['div[style*="width:180px"]', 'draw', 500],
+      ['p.serif', 'up', 650],
+      ['.voice-row', 'row', 450],
+      ['.folio', 'fade', 1200],
+    ],
+    'Content Lineup': [
+      ['.masthead', 'draw', 0],
+      ['.eyebrow', 'up', 200],
+      ['h2', 'up-lg', 300],
+      ['p.body', 'up', 500],
+      ['.lrow', 'row', 400],
+      ['.folio', 'fade', 1400],
+    ],
+    'Launch Plan': [
+      ['.masthead', 'draw', 0],
+      ['.eyebrow', 'up', 200],
+      ['h2', 'up-lg', 300],
+      ['p.body', 'up', 500],
+      ['.phase', 'card', 500],
+      ['.folio', 'fade', 1400],
+    ],
+    'Next Steps': [
+      ['.masthead', 'draw', 0],
+      ['img.orn', 'drift-l', 0],
+      ['.eyebrow', 'up', 200],
+      ['h2', 'up-lg', 300],
+      ['p.serif', 'up', 550],
+      ['.step-row', 'row', 500],
+      ['.closing-bar', 'card', 1200],
+      ['.folio', 'fade', 1400],
+    ],
+  };
+
+  const STAGGER = 110; // ms between items matched by the same selector
+
+  function resetSlide(slide) {
+    slide.removeAttribute('data-anim-playing');
+    slide.querySelectorAll('[data-anim]').forEach(el => {
+      el.removeAttribute('data-anim');
+      el.style.removeProperty('--d');
+    });
+  }
+
+  function tagSlide(slide) {
+    const label = (slide.getAttribute('data-screen-label') || '').replace(/^\d+\s*/, '').trim();
+    const recipe = RECIPES[label] || RECIPES[slide.getAttribute('data-label')];
+    if (!recipe) return;
+    const claimed = new WeakSet();
+    recipe.forEach(([sel, anim, baseDelay]) => {
+      const nodes = slide.querySelectorAll(sel);
+      let i = 0;
+      nodes.forEach(node => {
+        if (claimed.has(node)) return;
+        claimed.add(node);
+        node.setAttribute('data-anim', anim);
+        node.style.setProperty('--d', (baseDelay + i * STAGGER) + 'ms');
+        i++;
+      });
+    });
+  }
+
+  function playCountUps(slide) {
+    slide.querySelectorAll('.count-up').forEach(el => {
+      const target = parseFloat(el.getAttribute('data-target'));
+      const suffix = el.getAttribute('data-suffix') || '';
+      if (!Number.isFinite(target)) return;
+      const dur = 1100;
+      const start = performance.now();
+      // start delay aligns with the element's fade-in
+      const startDelay = parseInt((el.style.getPropertyValue('--d') || '0'), 10) || 0;
+      el.textContent = '0' + suffix;
+      function step(t) {
+        const e = t - start - startDelay;
+        if (e < 0) { requestAnimationFrame(step); return; }
+        const p = Math.min(1, e / dur);
+        const eased = 1 - Math.pow(1 - p, 3);
+        const v = target >= 10 ? Math.round(target * eased) : (target * eased).toFixed(0);
+        el.textContent = v + suffix;
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  }
+
+  function play(slide) {
+    if (!slide) return;
+    resetSlide(slide);
+    // Force a reflow so the transition re-runs on replay.
+    // eslint-disable-next-line no-unused-expressions
+    slide.offsetWidth;
+    tagSlide(slide);
+    // Next frame: flip the playing flag so CSS transitions fire.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        slide.setAttribute('data-anim-playing', '');
+        playCountUps(slide);
+      });
+    });
+  }
+
+  stage.addEventListener('slidechange', (e) => {
+    const prev = e.detail.previousSlide;
+    if (prev) resetSlide(prev);
+    play(e.detail.slide);
+  });
+
+  // Initial play if slidechange already fired before we attached.
+  const active = stage.querySelector('[data-deck-active]');
+  if (active) play(active);
+})();
+</script>
+
+</body>
+</html>
